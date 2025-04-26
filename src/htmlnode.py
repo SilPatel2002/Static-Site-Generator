@@ -56,4 +56,10 @@ class ParentNode(HTMLNode):
         if self.children == None:
             raise ValueError("Parent Node must have children")
         
-        
+        str = f"<{self.tag}>"
+
+        for child in self.children:
+  
+            str = str + child.to_html()
+
+        return str + "</" + self.tag + ">"
