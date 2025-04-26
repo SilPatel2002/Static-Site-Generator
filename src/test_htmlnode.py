@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 class TestHTMLNode(unittest.TestCase):
 
@@ -19,6 +19,29 @@ class TestHTMLNode(unittest.TestCase):
         node = HTMLNode(props={"class": "button", "id": "submit", "disabled": True})
         result = node.props_to_html()
         self.assertEqual(result, ' class="button" id="submit" disabled="True"')
+
+
+        #===================================TESTING LEAF NODES===========================================
+
+
+class TestLeafNode(unittest.TestCase):
+    def test_to_html(self):
+        result = LeafNode("p", "This is a paragraph of text.").to_html()
+        self.assertEqual(result, "<p>This is a paragraph of text.</p>")
+        
+
+    def test_to_html_with_props(self):
+       result = LeafNode("a", "Click me!", {"href": "https://www.google.com"}).to_html()
+       self.assertEqual(result, '<a href="https://www.google.com">Click me!</a>')
+
+    
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+
+
+    #===================================TESTING PARENT NODES===========================================
+
   
 
 
