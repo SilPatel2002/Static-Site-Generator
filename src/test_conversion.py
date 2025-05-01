@@ -1,6 +1,6 @@
 import unittest
 
-from conversion import text_node_to_html_node
+from conversion import text_node_to_html_node, split_nodes_delimiter
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode, ParentNode, LeafNode
 
@@ -42,6 +42,10 @@ class TestTextNodetoHTMLNode(unittest.TestCase):
 
     def test_empty_text(self):
         node = TextNode("", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "")
+
 
 
 
