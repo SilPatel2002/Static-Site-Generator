@@ -86,3 +86,73 @@ def extract_markdown_links(text):
     matches = re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
 
     return matches
+
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+
+    for old_node in old_nodes:
+
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        text = old_node.text
+        matches = extract_markdown_images(text)
+        result_nodes = []
+
+        if not matches:
+            new_nodes.append(old_node)
+            continue
+
+        for match in matches:
+            image_alt, image_link = match
+            before, after = text.split(f"![{image_alt}]({image_link})", 1)
+
+            if before:
+                result_nodes.append(TextNode(before, TextType.TEXT))
+            result_nodes.append(TextNode(image_alt, TextType.IMAGE, image_link))
+
+            text = after
+
+        if text:
+            result_nodes.append(TextNode(text, TextType.TEXT))
+
+        new_nodes.extend(result_nodes)
+
+    return new_nodes
+
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+
+    for old_node in old_nodes:
+
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        text = old_node.text
+        matches = extract_markdown_links(text)
+        result_nodes = []
+
+        if not matches:
+            new_nodes.append(old_node)
+            continue
+
+        for match in matches:
+            link_text, link_url = match
+            before, after = text.split(f"[{link_text}]({link_url})", 1)
+
+            if before:
+                result_nodes.append(TextNode(before, TextType.TEXT))
+            result_nodes.append(TextNode(link_text, TextType.LINK, link_url))
+
+            text = after
+
+        if text:
+            result_nodes.append(TextNode(text, TextType.TEXT))
+
+        new_nodes.extend(result_nodes)
+
+    return new_nodes

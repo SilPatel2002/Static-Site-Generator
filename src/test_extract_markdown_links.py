@@ -23,6 +23,12 @@ class TestExtractMarkdownLinks(unittest.TestCase):
         link_result = extract_markdown_links(text)
         assert link_result == [("link", "https://example.com")]
 
+    
+    def test_no_image(self):
+        text = "here is a text with no image"
+        links_result = extract_markdown_links(text)
+        assert links_result == []
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -25,6 +25,11 @@ class TestExtractMarkdownImages(unittest.TestCase):
         assert image_result == [("image", "https://example.com/pic.jpg")]
 
 
+    def test_no_image(self):
+        text = "here is a text with no image"
+        image_result = extract_markdown_images(text)
+        assert image_result == []
+
 
 
 if __name__ == "__main__":
