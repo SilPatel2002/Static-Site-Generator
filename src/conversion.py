@@ -74,6 +74,19 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     return new_nodes
 
 
+def extract_markdown_header(text):
+
+    lines = text.split("\n")
+
+    for line in lines:
+        if line.strip().startswith('# '):
+            line = line.split("# ", 1)
+            return line[1].strip()
+        
+    
+    raise Exception("Markdown has no header")
+
+
 def extract_markdown_images(text):
    
     matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
@@ -167,3 +180,6 @@ def text_to_textnodes(text):
     new_nodes = split_nodes_link(new_nodes)
 
     return new_nodes
+
+
+
