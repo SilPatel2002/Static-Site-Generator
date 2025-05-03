@@ -1,5 +1,7 @@
 import os
 import shutil
+from markdown_to_html_node import markdown_to_html_node
+from conversion import extract_markdown_header
 
 
 def empty_directory(folder_name):
@@ -26,6 +28,33 @@ def copy_directory(source, destination):
             copy_directory(new_source, new_destination)
 
 
+def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
+    
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    with open(from_path) as file:
+        content = file.read()
+
+    with open(template_path) as file:
+        template = file.read()
+
+    node = markdown_to_html_node(content)
+    html = node.to_html()
+    header = extract_markdown_header(content)
+
+    template = template.replace("{{ Title }}", header)
+    template = template.replace("{{ Content }}", html)
+
+
+    directories_needed = os.path.dirname(dest_path)
+    os.makedirs(directories_needed, exist_ok=True)
+
+
+    with open(dest_path, "w") as file:
+        file.write(template)
+
+    return
+
 
 
 def main():
@@ -34,6 +63,12 @@ def main():
 
     empty_directory("public")
     copy_directory(source, destination)
+    
+    generate_page("content/index.md", "template.html", "public/index.html")
+
+ 
+
+    
 
 
 
