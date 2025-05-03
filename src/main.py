@@ -56,15 +56,34 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     return
 
 
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str) -> None:
+    source_list = os.listdir(dir_path_content)
+
+    if not source_list:
+        return
+    
+    for file in source_list:
+        new_source = dir_path_content + "/" + file
+        new_destination = dest_dir_path + "/" + file
+
+        if os.path.isfile(new_source):
+            if new_source.endswith(".md"):
+                base, ext = os.path.splitext(new_destination)
+                new_destination = base + ".html"
+                generate_page(new_source, template_path, new_destination)
+
+        else:
+            os.makedirs(new_destination, exist_ok=True)
+            generate_pages_recursive(new_source, template_path, new_destination)
+
+
+
 
 def main():
-    source = os.getcwd() + "/static"
-    destination = os.getcwd() + "/public"
-
     empty_directory("public")
-    copy_directory(source, destination)
+    copy_directory("static", "public")
     
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
  
 
